@@ -95,8 +95,12 @@ func doRun(args []string) error {
 		return errors.Errorf("incorrect write timeout '%s', %v", *WriteTimeout, err)
 	}
 
-	if *BenchmarkTest {
-		return RunBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
+	if *BenchmarkTest == "http" {
+		return RunHttpBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
+	}
+
+	if *BenchmarkTest == "socket" {
+		return RunSocketBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
 	}
 
 	if !*Foreground {

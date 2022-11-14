@@ -1,0 +1,136 @@
+/**
+  Copyright (c) 2022 Zander Schwid & Co. LLC. All rights reserved.
+*/
+
+package main
+
+import (
+	"context"
+	"github.com/pkg/errors"
+	"flag"
+	"fmt"
+	"io"
+	"log"
+	"os"
+	rt "runtime"
+	"time"
+)
+
+var (
+	Exec    string
+	Version string
+	Build   string
+	HashedToken   string
+)
+
+func main() {
+
+	rt.GOMAXPROCS(rt.NumCPU())
+
+	Exec = os.Args[0]
+
+	os.Exit(Run(os.Args[1:]))
+
+}
+
+func Run(args []string) int {
+
+	if err := doRun(args); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		return 1
+	} else {
+		return 0
+	}
+
+}
+
+func doRun(args []string) error {
+
+	if len(args) == 0 {
+		flag.PrintDefaults()
+		return errors.New("empty flags")
+	}
+
+	flag.CommandLine.Parse(args)
+
+	if *GenerateToken {
+		token, err := generateToken()
+		if err != nil {
+			return err
+		}
+		hashedToken, err := hashToken(token)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Token: %s\n", token)
+		fmt.Printf("Hashed Token: %s\n", hashedToken)
+		return nil
+	}
+
+	token := os.Getenv("PORT_PROXY_TOKEN")
+	if token == "" {
+		token = PromptPassword("Enter token: ")
+	}
+
+	hashedToken, err := hashToken(token)
+	if err != nil {
+		return err
+	}
+
+	if hashedToken != HashedToken {
+		return errors.New("invalid token")
+	}
+
+	if len(Ports) == 0 {
+		return errors.New("empty forward ports")
+	}
+
+	readTimeout, err := time.ParseDuration(*ReadTimeout)
+	if err != nil {
+		return errors.Errorf("incorrect read timeout '%s', %v", *ReadTimeout, err)
+	}
+
+	writeTimeout, err := time.ParseDuration(*WriteTimeout)
+	if err != nil {
+		return errors.Errorf("incorrect write timeout '%s', %v", *WriteTimeout, err)
+	}
+
+	if !*Foreground {
+		// fork the process to run in background
+		return startBackground(token)
+	}
+
+	var logFile *os.File
+	var logWriter io.Writer
+
+	if *LogFile == "stdout" {
+		logWriter = os.Stdout
+	} else {
+		var err error
+		logFile, err = os.OpenFile(*LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if err != nil {
+			return errors.Errorf("fail to open file '%s', %v", *LogFile, err)
+		}
+		logWriter = logFile
+	}
+	defer func() {
+		if logFile != nil {
+			logFile.Close()
+		}
+	}()
+
+	log := log.New(logWriter,
+		"INFO: ",
+		log.Ldate|log.Ltime|log.Lshortfile)
+
+	log.Printf("%s %s %s\n", Exec, Version, Build)
+	log.Printf("Listen IP Address: %s\n", *ListenIP)
+	log.Printf("Forward Ports: %+v\n", Ports)
+	log.Printf("Verbose: %v\n", *Verbose)
+
+	ctx := context.WithValue(context.Background(), ReadTimeoutKey{}, readTimeout)
+	ctx = context.WithValue(context.Background(), WriteTimeoutKey{}, writeTimeout)
+
+	return runProxy(ctx, *ListenIP, Ports, log, *Verbose)
+}
+

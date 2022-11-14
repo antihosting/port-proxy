@@ -1,3 +1,8 @@
+/**
+  Copyright (c) 2022 Zander Schwid & Co. LLC. All rights reserved.
+*/
+
+
 package main
 
 import (

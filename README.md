@@ -1,7 +1,6 @@
 # port-proxy
 
-Simple Port Proxy
-Does not do anything, just route socket traffic from one to another.
+Simple Port Proxy. Routes traffic from one port to another. Primary usage is to run proxy on lower ports and forward traffic for high ports.
 
 ### Build
 

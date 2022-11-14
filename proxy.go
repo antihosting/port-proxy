@@ -17,10 +17,6 @@ import (
 
 func RunProxy(ctx context.Context, ip string, ports []ForwardPort, log *log.Logger, verbose bool) (err error) {
 
-	if ip == "" {
-		ip = "0.0.0.0"
-	}
-
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 

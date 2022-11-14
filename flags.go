@@ -25,7 +25,7 @@ type ForwardPortFlags []ForwardPort
 
 var (
 	Ports  ForwardPortFlags
-	ListenIP = flag.String("ip", "", "Listen/forward ip address, example '' or '127.0.0.1'")
+	ListenIP = flag.String("ip", "0.0.0.0", "Listen/forward ip address, example '0.0.0.0' or '127.0.0.1'")
 
 	ReadTimeout = flag.String("srt", "30s", "Socket read timeout")
 	WriteTimeout = flag.String("swt", "30s", "Socket write timeout")

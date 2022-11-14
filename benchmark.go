@@ -17,10 +17,6 @@ import (
 
 func RunBenchmarkTest(ip string, forward ForwardPort, bs, count int) error {
 
-	if ip == "" {
-		ip = "0.0.0.0"
-	}
-
 	listenAddr := fmt.Sprintf("%s:%d", ip, forward.SrcPort)
 	forwardAddr := fmt.Sprintf("%s:%d", ip, forward.DstPort)
 

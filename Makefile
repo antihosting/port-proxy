@@ -16,11 +16,11 @@ build:
 distr: build
 	rm -rf $(TARGET)
 	mkdir $(TARGET)
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(TARGET)/$(BIN_LINUX) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW)"
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(TARGET)/$(BIN_LINUX) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW) -X main.HashedToken=$(HASHED_TOKEN)"
 	gzip $(TARGET)/$(BIN_LINUX)
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(TARGET)/$(BIN_MAC) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW)"
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $(TARGET)/$(BIN_MAC) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW) -X main.HashedToken=$(HASHED_TOKEN)"
 	gzip $(TARGET)/$(BIN_MAC)
-	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ go build -o $(TARGET)/$(BIN_WINDOWS) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW)"
+	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ go build -o $(TARGET)/$(BIN_WINDOWS) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW) -X main.HashedToken=$(HASHED_TOKEN)"
 	gzip $(TARGET)/$(BIN_WINDOWS)
 
 update:

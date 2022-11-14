@@ -37,6 +37,8 @@ func RunSocketBenchmarkTest(ip string, forward ForwardPort, bs, count int) error
 
 	go RunProxy(ctx, ip, []ForwardPort { forward }, log.Default(), false)
 
+	time.Sleep(time.Millisecond)
+
 	return runSocketBenchmark(ctx, listenAddr, bs, count)
 
 }
@@ -116,6 +118,8 @@ func RunHttpBenchmarkTest(ip string, forward ForwardPort, bs, count int) error {
 	defer cancel()
 
 	go RunProxy(ctx, ip, []ForwardPort { forward }, log.Default(), false)
+
+	time.Sleep(time.Millisecond)
 
 	return runHttpBenchmark(listenAddr, bs, count)
 }

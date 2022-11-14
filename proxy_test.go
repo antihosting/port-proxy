@@ -41,6 +41,8 @@ func TestHTTPProxy(t *testing.T) {
 
 	payload := make([]byte, bs)
 
+	time.Sleep(time.Millisecond)
+
 	var sum float64
 	start := time.Now()
 
@@ -99,6 +101,8 @@ func TestSocketProxy(t *testing.T) {
 	})
 
 	go RunProxy(ctx, "127.0.0.1", ports, log.Default(), false)
+
+	time.Sleep(time.Millisecond)
 
 	payload := make([]byte, bs)
 	answer := make([]byte, len(payload))

@@ -30,7 +30,12 @@ var (
 	ReadTimeout = flag.String("srt", "30s", "Socket read timeout")
 	WriteTimeout = flag.String("swt", "30s", "Socket write timeout")
 
+	BenchmarkTest  = flag.Bool("b", false, "Run benchmark test")
+	BenchmarkSize  = flag.Int("bs", 1 << 20, "Batch size")
+	Count = flag.Int("count", 1024, "Count of tests")
+
 	GenerateToken  = flag.Bool("g", false, "Generate token and hashToken it")
+
 	Verbose    = flag.Bool("v", false, "Print logs and debug information")
 	Foreground = flag.Bool("f", false, "Indicator that proxy is running in foreground")
 	LogFile    = flag.String("log", "stdout", "Write log to file")

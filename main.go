@@ -95,6 +95,10 @@ func doRun(args []string) error {
 		return errors.Errorf("incorrect write timeout '%s', %v", *WriteTimeout, err)
 	}
 
+	if *BenchmarkTest {
+		return RunBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
+	}
+
 	if !*Foreground {
 		// fork the process to run in background
 		return startBackground(token)
@@ -131,6 +135,6 @@ func doRun(args []string) error {
 	ctx := context.WithValue(context.Background(), ReadTimeoutKey{}, readTimeout)
 	ctx = context.WithValue(context.Background(), WriteTimeoutKey{}, writeTimeout)
 
-	return runProxy(ctx, *ListenIP, Ports, log, *Verbose)
+	return RunProxy(ctx, *ListenIP, Ports, log, *Verbose)
 }
 

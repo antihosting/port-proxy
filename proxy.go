@@ -15,7 +15,7 @@ import (
 	"syscall"
 )
 
-func runProxy(ctx context.Context, ip string, ports []ForwardPort, log *log.Logger, verbose bool) (err error) {
+func RunProxy(ctx context.Context, ip string, ports []ForwardPort, log *log.Logger, verbose bool) (err error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()

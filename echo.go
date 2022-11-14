@@ -2,7 +2,7 @@
   Copyright (c) 2022 Zander Schwid & Co. LLC. All rights reserved.
 */
 
-package main
+package proxy
 
 import (
 	"context"
@@ -18,10 +18,10 @@ import (
 	"time"
 )
 
-type echoHandler struct {
+type EchoHandler struct {
 }
 
-func(t *echoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func(t *EchoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

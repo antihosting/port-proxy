@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	proxy "github.com/antihosting/port-proxy"
 	"github.com/pkg/errors"
 	"flag"
 	"fmt"
@@ -54,11 +55,11 @@ func doRun(args []string) error {
 	flag.CommandLine.Parse(args)
 
 	if *GenerateToken {
-		token, err := generateToken()
+		token, err := proxy.GenerateToken()
 		if err != nil {
 			return err
 		}
-		hashedToken, err := hashToken(token)
+		hashedToken, err := proxy.HashToken(token)
 		if err != nil {
 			return err
 		}
@@ -69,10 +70,10 @@ func doRun(args []string) error {
 
 	token := os.Getenv("PORT_PROXY_TOKEN")
 	if token == "" {
-		token = PromptPassword("Enter token: ")
+		token = proxy.PromptPassword("Enter token: ")
 	}
 
-	hashedToken, err := hashToken(token)
+	hashedToken, err := proxy.HashToken(token)
 	if err != nil {
 		return err
 	}
@@ -96,11 +97,11 @@ func doRun(args []string) error {
 	}
 
 	if *BenchmarkTest == "http" {
-		return RunHttpBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
+		return proxy.RunHttpBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
 	}
 
 	if *BenchmarkTest == "socket" {
-		return RunSocketBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
+		return proxy.RunSocketBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
 	}
 
 	if !*Foreground {
@@ -136,9 +137,9 @@ func doRun(args []string) error {
 	log.Printf("Forward Ports: %+v\n", Ports)
 	log.Printf("Verbose: %v\n", *Verbose)
 
-	ctx := context.WithValue(context.Background(), ReadTimeoutKey{}, readTimeout)
-	ctx = context.WithValue(context.Background(), WriteTimeoutKey{}, writeTimeout)
+	ctx := context.WithValue(context.Background(), proxy.ReadTimeoutKey{}, readTimeout)
+	ctx = context.WithValue(context.Background(), proxy.WriteTimeoutKey{}, writeTimeout)
 
-	return RunProxy(ctx, *ListenIP, Ports, log, *Verbose)
+	return proxy.RunProxy(ctx, *ListenIP, Ports, log, *Verbose)
 }
 

@@ -2,13 +2,13 @@
   Copyright (c) 2022 Zander Schwid & Co. LLC. All rights reserved.
 */
 
-package main
+package proxy
 
 import (
 	"bytes"
 	"context"
-	"github.com/pkg/errors"
 	"fmt"
+	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 	"io"
 	"io/ioutil"
@@ -35,7 +35,7 @@ func RunSocketBenchmarkTest(ip string, forward ForwardPort, bs, count int) error
 
 	go echo.Serve()
 
-	go RunProxy(ctx, ip, []ForwardPort { forward }, log.Default(), false)
+	go RunProxy(ctx, ip, []ForwardPort{forward }, log.Default(), false)
 
 	time.Sleep(time.Millisecond)
 
@@ -108,7 +108,7 @@ func RunHttpBenchmarkTest(ip string, forward ForwardPort, bs, count int) error {
 
 	server := &http.Server{
 		Addr:    forwardAddr,
-		Handler: &echoHandler{},
+		Handler: &EchoHandler{},
 	}
 	defer server.Close()
 
@@ -117,7 +117,7 @@ func RunHttpBenchmarkTest(ip string, forward ForwardPort, bs, count int) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	go RunProxy(ctx, ip, []ForwardPort { forward }, log.Default(), false)
+	go RunProxy(ctx, ip, []ForwardPort{forward }, log.Default(), false)
 
 	time.Sleep(time.Millisecond)
 

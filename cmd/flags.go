@@ -6,22 +6,13 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	proxy "github.com/antihosting/port-proxy"
 	"github.com/pkg/errors"
 	"strconv"
 	"strings"
 )
 
-type ForwardPort struct {
-	SrcPort int
-	DstPort int
-}
-
-func (t ForwardPort) String() string {
-	return fmt.Sprintf("%d:%d", t.SrcPort, t.DstPort)
-}
-
-type ForwardPortFlags []ForwardPort
+type ForwardPortFlags []proxy.ForwardPort
 
 var (
 	Ports  ForwardPortFlags
@@ -62,7 +53,7 @@ func (f *ForwardPortFlags) Set(value string) error {
 	if err != nil {
 		return errors.Errorf("parsing of second part '%s' of '%s' was failed with error %v", value[i+1:], value, err)
 	}
-	*f = append(*f, ForwardPort{ SrcPort: int(src), DstPort: int(dst) } )
+	*f = append(*f, proxy.ForwardPort{ SrcPort: int(src), DstPort: int(dst) } )
 	return nil
 }
 

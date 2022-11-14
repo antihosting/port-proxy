@@ -2,7 +2,7 @@
   Copyright (c) 2022 Zander Schwid & Co. LLC. All rights reserved.
 */
 
-package main
+package proxy
 
 import (
 	"crypto/rand"
@@ -11,7 +11,7 @@ import (
 	"io"
 )
 
-func generateToken() (string, error) {
+func GenerateToken() (string, error) {
 	nonce := make([]byte, 256 / 8)
 	if _, err := io.ReadFull(rand.Reader, nonce); err == nil {
 		return base62.StdEncoding.EncodeToString(nonce), nil
@@ -20,7 +20,7 @@ func generateToken() (string, error) {
 	}
 }
 
-func hashToken(token string) (string, error) {
+func HashToken(token string) (string, error) {
 
 	bin, err := base62.StdEncoding.DecodeString(token)
 	if err != nil {

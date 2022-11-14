@@ -2,7 +2,7 @@
   Copyright (c) 2022 Zander Schwid & Co. LLC. All rights reserved.
 */
 
-package main
+package proxy
 
 import (
 	"context"
@@ -14,6 +14,15 @@ import (
 	"os/signal"
 	"syscall"
 )
+
+type ForwardPort struct {
+	SrcPort int
+	DstPort int
+}
+
+func (t ForwardPort) String() string {
+	return fmt.Sprintf("%d:%d", t.SrcPort, t.DstPort)
+}
 
 func RunProxy(ctx context.Context, ip string, ports []ForwardPort, log *log.Logger, verbose bool) (err error) {
 

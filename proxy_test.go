@@ -3,12 +3,13 @@
 */
 
 
-package main
+package proxy_test
 
 import (
 	"bytes"
 	"context"
 	"errors"
+	"github.com/antihosting/port-proxy/cmd"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 	"io"
@@ -32,9 +33,9 @@ func TestHTTPProxy(t *testing.T) {
 
 	go server.ListenAndServe()
 	
-	var ports []ForwardPort
+	var ports []main.ForwardPort
 
-	ports = append(ports, ForwardPort {
+	ports = append(ports, main.ForwardPort{
 		SrcPort: 50550,
 		DstPort: 50551,
 	})
@@ -98,9 +99,9 @@ func TestSocketProxy(t *testing.T) {
 	defer echo.Close()
 	go echo.Serve()
 
-	var ports []ForwardPort
+	var ports []main.ForwardPort
 
-	ports = append(ports, ForwardPort {
+	ports = append(ports, main.ForwardPort{
 		SrcPort: 50450,
 		DstPort: 50451,
 	})

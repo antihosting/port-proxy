@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"github.com/antihosting/port-proxy/cmd"
+	proxy "github.com/antihosting/port-proxy"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 	"io"
@@ -28,14 +28,14 @@ func TestHTTPProxy(t *testing.T) {
 
 	server := &http.Server{
 		Addr:              "127.0.0.1:50551",
-		Handler: &echoHandler{},
+		Handler: &proxy.EchoHandler{},
 	}
 
 	go server.ListenAndServe()
 	
-	var ports []main.ForwardPort
+	var ports []proxy.ForwardPort
 
-	ports = append(ports, main.ForwardPort{
+	ports = append(ports, proxy.ForwardPort{
 		SrcPort: 50550,
 		DstPort: 50551,
 	})
@@ -43,7 +43,7 @@ func TestHTTPProxy(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	go RunProxy(ctx, "127.0.0.1", ports, log.Default(), false)
+	go proxy.RunProxy(ctx, "127.0.0.1", ports, log.Default(), false)
 
 	payload := make([]byte, bs)
 
@@ -92,21 +92,21 @@ func TestSocketProxy(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	echo := NewEchoServer(ctx, "127.0.0.1:50451")
+	echo := proxy.NewEchoServer(ctx, "127.0.0.1:50451")
 	err := echo.Bind()
 	require.NoError(t, err)
 
 	defer echo.Close()
 	go echo.Serve()
 
-	var ports []main.ForwardPort
+	var ports []proxy.ForwardPort
 
-	ports = append(ports, main.ForwardPort{
+	ports = append(ports, proxy.ForwardPort{
 		SrcPort: 50450,
 		DstPort: 50451,
 	})
 
-	go RunProxy(ctx, "127.0.0.1", ports, log.Default(), false)
+	go proxy.RunProxy(ctx, "127.0.0.1", ports, log.Default(), false)
 
 	time.Sleep(time.Millisecond)
 

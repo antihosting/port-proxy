@@ -14,6 +14,7 @@ import (
 	"log"
 	"os"
 	rt "runtime"
+	"strings"
 	"time"
 )
 
@@ -96,12 +97,14 @@ func doRun(args []string) error {
 		return errors.Errorf("incorrect write timeout '%s', %v", *WriteTimeout, err)
 	}
 
-	if *BenchmarkTest == "http" {
-		return proxy.RunHttpBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
+	withProxy := strings.HasSuffix(*BenchmarkTest, "proxy")
+
+	if strings.HasPrefix(*BenchmarkTest, "http") {
+		return proxy.RunHttpBenchmarkTest(*ListenIP, Ports[0], withProxy, *BenchmarkSize, *Count)
 	}
 
-	if *BenchmarkTest == "socket" {
-		return proxy.RunSocketBenchmarkTest(*ListenIP, Ports[0], *BenchmarkSize, *Count)
+	if strings.HasPrefix(*BenchmarkTest, "socket") {
+		return proxy.RunSocketBenchmarkTest(*ListenIP, Ports[0], withProxy, *BenchmarkSize, *Count)
 	}
 
 	if !*Foreground {

@@ -18,7 +18,7 @@ import (
 	"time"
 )
 
-func RunSocketBenchmarkTest(ip string, forward ForwardPort, bs, count int) error {
+func RunSocketBenchmarkTest(ip string, forward ForwardPort, runProxy bool, bs, count int) error {
 
 	listenAddr := fmt.Sprintf("%s:%d", ip, forward.SrcPort)
 	forwardAddr := fmt.Sprintf("%s:%d", ip, forward.DstPort)
@@ -35,7 +35,9 @@ func RunSocketBenchmarkTest(ip string, forward ForwardPort, bs, count int) error
 
 	go echo.Serve()
 
-	go RunProxy(ctx, ip, []ForwardPort{forward }, log.Default(), false)
+	if runProxy {
+		go RunProxy(ctx, ip, []ForwardPort{forward}, log.Default(), false)
+	}
 
 	time.Sleep(time.Millisecond)
 
@@ -101,7 +103,7 @@ func runSocketBenchmark(ctx context.Context, listenAddr string, bs, count int) e
 
 }
 
-func RunHttpBenchmarkTest(ip string, forward ForwardPort, bs, count int) error {
+func RunHttpBenchmarkTest(ip string, forward ForwardPort, runProxy bool,  bs, count int) error {
 
 	listenAddr := fmt.Sprintf("%s:%d", ip, forward.SrcPort)
 	forwardAddr := fmt.Sprintf("%s:%d", ip, forward.DstPort)
@@ -117,7 +119,9 @@ func RunHttpBenchmarkTest(ip string, forward ForwardPort, bs, count int) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	go RunProxy(ctx, ip, []ForwardPort{forward }, log.Default(), false)
+	if runProxy {
+		go RunProxy(ctx, ip, []ForwardPort{forward}, log.Default(), false)
+	}
 
 	time.Sleep(time.Millisecond)
 

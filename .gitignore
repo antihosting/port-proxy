@@ -1,6 +1,6 @@
 .idea/
-.hashed-token.txt
+cmd/.hashed-token.txt
 port_proxy
 port_proxy.log
 port_proxy.pid
-distr/
+target/

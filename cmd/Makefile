@@ -13,7 +13,7 @@ HASHED_TOKEN := $(shell cat .hashed-token.txt)
 build:
 	go build -o port_proxy -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW) -X main.HashedToken=$(HASHED_TOKEN)"
 
-distr: build
+target: build
 	rm -rf $(TARGET)
 	mkdir $(TARGET)
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(BIN_LINUX) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW) -X main.HashedToken=$(HASHED_TOKEN)"

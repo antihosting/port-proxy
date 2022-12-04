@@ -6,7 +6,7 @@ package main
 
 import (
 	"flag"
-	proxy "github.com/antihosting/port-proxy"
+	proxy "github.com/antihosting/tcp-proxy"
 	"github.com/pkg/errors"
 	"strconv"
 	"strings"

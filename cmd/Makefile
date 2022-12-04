@@ -1,4 +1,4 @@
-APP_NAME := port_proxy
+APP_NAME := tcp_proxy
 
 BIN := $(APP_NAME)
 BIN_MAC := $(BIN)_darwin
@@ -10,7 +10,7 @@ VERSION := $(shell git describe --tags --always --dirty)
 NOW := $(shell date +"%m-%d-%Y")
 
 build:
-	go build -o port_proxy -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW)"
+	go build -o $(BIN) -v -ldflags "-X main.Version=$(VERSION) -X main.Build=$(NOW)"
 
 target: build
 	rm -rf $(TARGET)

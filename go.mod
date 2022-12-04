@@ -1,4 +1,4 @@
-module github.com/antihosting/port-proxy
+module github.com/antihosting/tcp-proxy
 
 go 1.16
 

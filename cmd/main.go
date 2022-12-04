@@ -6,7 +6,7 @@ package main
 
 import (
 	"context"
-	proxy "github.com/antihosting/port-proxy"
+	proxy "github.com/antihosting/tcp-proxy"
 	"github.com/pkg/errors"
 	"flag"
 	"fmt"

@@ -6,13 +6,12 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
 )
 
-func startBackground(token string) error {
+func startBackground() error {
 
 	executable, err := os.Executable()
 	if err != nil {
@@ -37,14 +36,6 @@ func startBackground(token string) error {
 
 	cmd := exec.Command(executable, args...)
 	fmt.Printf("Run cmd: %v\n", cmd)
-
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		return err
-	}
-	defer stdin.Close()
-
-	io.WriteString(stdin, token+"\n")
 
 	if err := cmd.Start(); err != nil {
 		return err

@@ -22,7 +22,6 @@ var (
 	Exec    string
 	Version string
 	Build   string
-	HashedToken   string
 )
 
 func main() {
@@ -55,34 +54,6 @@ func doRun(args []string) error {
 
 	flag.CommandLine.Parse(args)
 
-	if *GenerateToken {
-		token, err := proxy.GenerateToken()
-		if err != nil {
-			return err
-		}
-		hashedToken, err := proxy.HashToken(token)
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Token: %s\n", token)
-		fmt.Printf("Hashed Token: %s\n", hashedToken)
-		return nil
-	}
-
-	token := os.Getenv("PORT_PROXY_TOKEN")
-	if token == "" {
-		token = proxy.PromptPassword("Enter token: ")
-	}
-
-	hashedToken, err := proxy.HashToken(token)
-	if err != nil {
-		return err
-	}
-
-	if hashedToken != HashedToken {
-		return errors.New("invalid token")
-	}
-
 	if len(Ports) == 0 {
 		return errors.New("empty forward ports")
 	}
@@ -109,7 +80,7 @@ func doRun(args []string) error {
 
 	if !*Foreground {
 		// fork the process to run in background
-		return startBackground(token)
+		return startBackground()
 	}
 
 	var logFile *os.File

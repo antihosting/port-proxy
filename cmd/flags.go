@@ -25,8 +25,6 @@ var (
 	BenchmarkSize  = flag.Int("bs", 1 << 20, "Batch size")
 	Count = flag.Int("count", 1024, "Count of tests")
 
-	GenerateToken  = flag.Bool("g", false, "Generate token and hashToken it")
-
 	Verbose    = flag.Bool("v", false, "Print logs and debug information")
 	Foreground = flag.Bool("f", false, "Indicator that proxy is running in foreground")
 	LogFile    = flag.String("log", "stdout", "Write log to file")
